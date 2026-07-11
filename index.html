@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BusinessOS AI Chat</title>
+</head>
+<body>
+    <h1>Welcome to BusinessOS AI</h1>
+    <p>Chat with my business expert agent below!</p>
+
+    <!-- Your IBM Watsonx Orchestrate Snippet -->
+    <script>
+      window.wxOConfiguration = {
+        orchestrationID: "087ff45ea521409f96a57756206c95c5_aee657bc-838f-4e45-8d9a-3ef3a0560bf2",
+        hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+        rootElementID: "root",
+        deploymentPlatform: "ibmcloud",
+        crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/087ff45ea521409f96a57756206c95c5:aee657bc-838f-4e45-8d9a-3ef3a0560bf2::",
+        chatOptions: {
+            agentId: "4ed13614-c193-4a6c-9daf-f4a529d7d300", 
+        }
+      };
+      setTimeout(function () {
+        const script = document.createElement('script');
+        script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+        script.addEventListener('load', function () {
+            wxoLoader.init();
+        });
+        document.head.appendChild(script);
+      }, 0);                     
+    </script>
+</body>
+</html>
