@@ -3,32 +3,315 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BusinessOS AI Chat</title>
+    <title>BusinessOS AI - Enterprise Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Modern CSS Reset & Variables */
+        :root {
+            --bg-dark: #0f172a;
+            --bg-surface: #1e293b;
+            --bg-card: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-teal: #14b8a6;
+            --accent-blue: #3b82f6;
+            --border-color: #475569;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+            margin-bottom: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link {
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--bg-card);
+            color: var(--text-main);
+            border-left: 3px solid var(--accent-teal);
+        }
+
+        /* Main Workspace */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Top Header */
+        .header {
+            height: 70px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-status {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .badge {
+            background-color: rgba(20, 184, 166, 0.1);
+            color: var(--accent-teal);
+            border: 1px solid var(--accent-teal);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+
+        .badge-blue {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: var(--accent-blue);
+            border: 1px solid var(--accent-blue);
+        }
+
+        /* Dashboard Grid Layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 1.5rem;
+            padding: 1.5rem;
+            height: calc(100vh - 70px);
+        }
+
+        /* Tools Panel (Left Side) */
+        .tools-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+        }
+
+        .card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+
+        /* Input Controls */
+        input[type="text"] {
+            width: 100%;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent-teal);
+        }
+
+        button {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--accent-teal);
+            color: var(--bg-dark);
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        /* Health Score UI */
+        .score-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 8px solid var(--border-color);
+            border-top-color: var(--accent-teal);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-teal);
+        }
+
+        /* Chat Panel (Right Side) */
+        .chat-panel {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Root div for Watsonx */
+        #root {
+            width: 100%;
+            height: 100%;
+            min-height: 500px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to BusinessOS AI</h1>
-    <p>Chat with my business expert agent below!</p>
 
-    <!-- Your IBM Watsonx Orchestrate Snippet -->
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand">
+            ⚡ BusinessOS AI
+        </div>
+        <div class="nav-link active">Strategy Workspace</div>
+        <div class="nav-link">Startup Mentor</div>
+        <div class="nav-link">Competitor Radar</div>
+        <div class="nav-link">Settings</div>
+    </aside>
+
+    <!-- Main Workspace -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <div>
+                <h2 style="font-size: 1.25rem;">Active Strategy Session</h2>
+            </div>
+            <div class="header-status">
+                <span class="badge badge-blue">Model: GPT-OSS-120B (Groq)</span>
+                <span class="badge">Node: IBM Cloud (au-syd)</span>
+            </div>
+        </header>
+
+        <!-- Dashboard Grid -->
+        <div class="dashboard-grid">
+            
+            <!-- Left Panel: Context & Tools -->
+            <div class="tools-panel">
+                
+                <!-- URL Ingestion Card -->
+                <div class="card">
+                    <h3>Context URL Ingestion</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;">
+                        Drop a competitor or business website below for the agent to crawl and analyze.
+                    </p>
+                    <input type="text" id="urlInput" placeholder="https://example-startup.com">
+                    <button onclick="simulateCrawl()">Crawl Website Context</button>
+                    <p id="crawlStatus" style="font-size: 0.75rem; color: var(--accent-teal); margin-top: 0.75rem; display: none;">✓ Context loaded into vector database.</p>
+                </div>
+
+                <!-- Business Health Score Card -->
+                <div class="card" style="text-align: center;">
+                    <h3>Live Business Health Score</h3>
+                    <div class="score-circle" id="healthScore">84</div>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">
+                        Based on market viability and roadmap integrity.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Panel: AI Chat Terminal -->
+            <div class="chat-panel">
+                <!-- IBM Watsonx Orchestrate Target Container -->
+                <div id="root"></div>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- UI Logic Script -->
     <script>
-      window.wxOConfiguration = {
-        orchestrationID: "087ff45ea521409f96a57756206c95c5_aee657bc-838f-4e45-8d9a-3ef3a0560bf2",
-        hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
-        rootElementID: "root",
-        deploymentPlatform: "ibmcloud",
-        crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/087ff45ea521409f96a57756206c95c5:aee657bc-838f-4e45-8d9a-3ef3a0560bf2::",
-        chatOptions: {
-            agentId: "4ed13614-c193-4a6c-9daf-f4a529d7d300", 
+        function simulateCrawl() {
+            const input = document.getElementById('urlInput');
+            const status = document.getElementById('crawlStatus');
+            const score = document.getElementById('healthScore');
+            
+            if (input.value.trim() !== '') {
+                status.innerText = "Crawling website... Please wait.";
+                status.style.color = "var(--accent-blue)";
+                status.style.display = "block";
+                
+                setTimeout(() => {
+                    status.innerText = "✓ Context securely loaded into Vector DB.";
+                    status.style.color = "var(--accent-teal)";
+                    input.value = '';
+                    
+                    // Simulate score update
+                    score.innerText = Math.floor(Math.random() * (99 - 75 + 1)) + 75;
+                }, 1500);
+            }
         }
-      };
-      setTimeout(function () {
-        const script = document.createElement('script');
-        script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
-        script.addEventListener('load', function () {
-            wxoLoader.init();
-        });
-        document.head.appendChild(script);
-      }, 0);                     
+    </script>
+
+    <!-- Your Original IBM Watsonx Orchestrate Snippet -->
+    <script>
+        window.wxOConfiguration = {
+            orchestrationID: "087ff45ea521409f96a57756206c95c5_aee657bc-838f-4e45-8d9a-3ef3a0560bf2",
+            hostURL: "https://au-syd.watson-orchestrate.cloud.ibm.com",
+            rootElementID: "root", // Injects directly into the chat-panel div above
+            deploymentPlatform: "ibmcloud",
+            crn: "crn:v1:bluemix:public:watsonx-orchestrate:au-syd:a/087ff45ea521409f96a57756206c95c5:aee657bc-838f-4e45-8d9a-3ef3a0560bf2::",
+            chatOptions: {
+                agentId: "4ed13614-c193-4a6c-9daf-f4a529d7d300", 
+            }
+        };
+        setTimeout(function () {
+            const script = document.createElement('script');
+            script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+            script.addEventListener('load', function () {
+                wxoLoader.init();
+            });
+            document.head.appendChild(script);
+        }, 0);                     
     </script>
 </body>
-</html> 
+</html>
